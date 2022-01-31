@@ -106,15 +106,17 @@ class LocalStorage {
 }
 
 var storage = new LocalStorage();
-var tabs = [];
+var tabs;
 
 function loadTabs() {
     storage.loadTabs('tabs', function(items) {
         tabs = [];
         if (items != undefined) {
             for (var i = 0; i < items.length; i++) {
-                tabs.push(new Tab(items[i].url, items[i].favicon, items[i].days, items[i].summaryTime, items[i].counter));
+                var x = new Tab(items[i].url, items[i].days, items[i].summaryTime, items[i].counter)
+                tabs.push(x);
             }
+            console.log("stored tabs ",tabs);
         }
     });
 }
@@ -139,7 +141,7 @@ async function getCurrentTab() {
 
 function backgroundCheck() {
     chrome.windows.getLastFocused({ populate: true }, function(currentWindow) {
-        console.log("current window", currentWindow)
+        //console.log("current window", currentWindow)
         if (currentWindow.focused) {
             var activeTab = currentWindow.tabs.find(t => t.active === true);
             console.log("current tab", activeTab)
@@ -179,5 +181,5 @@ function backgroundCheck() {
     });
 }
 
-//loadTabs();
+loadTabs();
 bgCheckInterval()
