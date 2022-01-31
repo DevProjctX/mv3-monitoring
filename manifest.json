@@ -1,7 +1,7 @@
 {
     // Comments are accepted in the manifest, even though it is JSON.
     "manifest_version": 3,
-    "name": "Chrome Extension v3 Starter",
+    "name": "Proctor Activity",
     "description": "A minimal example of a chrome extension using manifest v3",
     "version": "0.0.1",
     "icons": {
@@ -15,7 +15,8 @@
         "default_popup": "popup/popup.html"
     },
     "permissions": [
-        "tabs"
+        "tabs",
+        "storage"
     ],
     "host_permissions": [
         "*://*/*"

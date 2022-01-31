@@ -11,6 +11,114 @@ importScripts('service-worker-utils.js')
 // extension, simply do `importScripts('path/to/file.js')`.
 // The path should be relative to the file `manifest.json`.
 
+class Tab {
+    constructor(url, days, summary, counter) {
+        this.url = url;
+
+        if (summary !== undefined)
+            this.summaryTime = summary;
+        else
+            this.summaryTime = 0;
+        if (counter !== undefined)
+            this.counter = counter;
+        else
+            this.counter = 0;
+        if (days !== undefined)
+            this.days = days;
+        else
+            this.days = [];
+    }
+
+    incSummaryTime() {
+        this.summaryTime += 1;
+        var day = this.days.find(x => x.date == todayLocalDate());
+        if (day === undefined) {
+            this.addNewDay(todayLocalDate());
+        }
+        else {
+            day['summary'] += 1;
+        }
+    }
+
+    getTodayTime(){
+        return this.days.find(x => x.date == todayLocalDate()).summary;
+    }
+
+    incCounter(){
+        this.counter +=1;
+        var day = this.days.find(x => x.date == todayLocalDate());
+        if (day === undefined) {
+            this.addNewDay(todayLocalDate());
+        }
+        else {
+            day['counter'] += 1;
+        }
+    }
+
+    addNewDay(today) {
+        this.days.push(
+            {
+                'date': today,
+                'summary': 1,
+                'counter': 1
+            }
+        );
+    }
+};
+
+class LocalStorage {
+    loadTabs(name, callback, callbackIsUndefined) {
+        chrome.storage.local.get(name, function(item) {
+            if (item[name] !== undefined) {
+                var result = item[name];
+                if (result !== undefined)
+                    callback(result);
+            } else {
+                if (callbackIsUndefined !== undefined)
+                    callbackIsUndefined();
+            }
+        });
+    }
+
+    saveTabs(value, callback) {
+        chrome.storage.local.set({ tabs: value });
+        if (callback !== undefined)
+            callback();
+    }
+
+    saveValue(name, value) {
+        chrome.storage.local.set({
+            [name]: value
+        });
+    }
+
+    getValue(name, callback) {
+        chrome.storage.local.get(name, function(item) {
+            if (item !== undefined) {
+                callback(item[name]);
+            }
+        });
+    }
+
+    getMemoryUse(name, callback) {
+        chrome.storage.local.getBytesInUse(name, callback);
+    };
+}
+
+var storage = new LocalStorage();
+var tabs = [];
+
+function loadTabs() {
+    storage.loadTabs('tabs', function(items) {
+        tabs = [];
+        if (items != undefined) {
+            for (var i = 0; i < items.length; i++) {
+                tabs.push(new Tab(items[i].url, items[i].favicon, items[i].days, items[i].summaryTime, items[i].counter));
+            }
+        }
+    });
+}
+
 function checkCurrentTab(){
     setInterval(getCurrentTab, 2000)
 }
@@ -34,12 +142,19 @@ function backgroundCheck() {
         console.log("current window", currentWindow)
         if (currentWindow.focused) {
             var activeTab = currentWindow.tabs.find(t => t.active === true);
-            if (activeTab !== undefined && activity.isValidPage(activeTab)) {
-                var activeUrl = new Url(activeTab.url);
+            console.log("current tab", activeTab)
+            if (activeTab !== undefined /*&& activity.isValidPage(activeTab)*/) {
+                var activeUrl = activeTab.url;
                 // var tab = activity.getTab(activeUrl);
                 // if (tab === undefined) {
                 //     activity.addTab(activeTab);
                 // }
+                var newTab = new Tab(activeUrl);
+                console.log("new tab val is ", newTab)
+                tabs.push(newTab);
+
+                storage.saveTabs(tabs);
+
                 console.log("active url is bg Check", activeUrl)
                 // if (activity.isInBlackList(activeUrl)) {
                 //     chrome.browserAction.setBadgeBackgroundColor({ color: '#FF0000' })
@@ -64,4 +179,5 @@ function backgroundCheck() {
     });
 }
 
+//loadTabs();
 bgCheckInterval()
