@@ -23,15 +23,15 @@ const colRef = collection(db, "db-test")
 async function add_data() {
   //add data to firestore
 
-    await setDoc(doc(colRef, "SF_new"), {
+    await setDoc(doc(colRef, "SF_bg"), {
         name: "San Francisco", state: "CA", country: "USA",
         capital: false, population: 860000,
         regions: ["west_coast", "norcal"] });
 
-    console.log("data aded");
+    console.log("data added");
 }
-
-const searchButton = document.getElementById("trigger_fire");
+add_data();
+/*const searchButton = document.getElementById("trigger_fire");
 searchButton.addEventListener("click",()=>{
   add_data();
-})
+})*/

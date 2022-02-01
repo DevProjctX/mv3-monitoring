@@ -154,12 +154,12 @@ function backgroundCheck() {
                 // }
                 //const tabId = getTabId();
 
-               /* chrome.scripting.executeScript(
+                chrome.scripting.executeScript(
                     {
                       target: {tabId: activeTab.id, allFrames: true},
-                      files: ['../dist/bundle.js'],
+                      files: ['./dist/bundle.js'],
                     },
-                );*/
+                );
                 var newTab = new Tab(activeUrl);
                 console.log("new tab val is ", newTab)
                 tabs.push(newTab);
