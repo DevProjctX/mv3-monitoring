@@ -7,6 +7,7 @@ console.log("This prints to the console of the service worker (background script
 // Importing and using functionality from external files is also possible.
 importScripts('service-worker-utils.js')
 
+
 // If you want to import a file that is deeper in the file hierarchy of your
 // extension, simply do `importScripts('path/to/file.js')`.
 // The path should be relative to the file `manifest.json`.
@@ -106,7 +107,7 @@ class LocalStorage {
 }
 
 var storage = new LocalStorage();
-var tabs;
+var tabs=[];
 
 function loadTabs() {
     storage.loadTabs('tabs', function(items) {
@@ -151,6 +152,14 @@ function backgroundCheck() {
                 // if (tab === undefined) {
                 //     activity.addTab(activeTab);
                 // }
+                //const tabId = getTabId();
+
+               /* chrome.scripting.executeScript(
+                    {
+                      target: {tabId: activeTab.id, allFrames: true},
+                      files: ['../dist/bundle.js'],
+                    },
+                );*/
                 var newTab = new Tab(activeUrl);
                 console.log("new tab val is ", newTab)
                 tabs.push(newTab);
