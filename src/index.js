@@ -1,5 +1,6 @@
 import { initializeApp } from "firebase/app"
 import { getFirestore, collection, query, where, getDocs, addDoc, setDoc, doc } from "firebase/firestore"
+import {getAuth, onAuthStateChanged} from 'firebase/auth';
 const firebaseApp = initializeApp({
           apiKey: "AIzaSyCFqdrDM-UZh8mOj12_AbdYu8qvzJE9Z5M",
           authDomain: "personal-test-81fe1.firebaseapp.com",
@@ -53,6 +54,9 @@ function get_data_from_storage( ){
 
 send_data_Interval();
 
+export{
+    firebaseApp
+}
 //add_data();
 /*const searchButton = document.getElementById("trigger_fire");
 searchButton.addEventListener("click",()=>{
