@@ -1,5 +1,4 @@
 {
-    // Comments are accepted in the manifest, even though it is JSON.
     "manifest_version": 3,
     "name": "Proctor Activity",
     "description": "A minimal example of a chrome extension using manifest v3",
@@ -26,7 +25,8 @@
         "service_worker": "./service-worker.js"
     },
     "content_scripts": [{
-        "js": ["./foreground.js"],
-        "matches": ["https://github.com/*"]
-    }]
+        "js": ["./foreground.js","./dist/bundle.js"],
+        "matches": ["<all_urls>"]
+    }
+    ]
 }

@@ -11,26 +11,49 @@ const firebaseApp = initializeApp({
           measurementId: "G-BZQJ4NKXGQ"
   });
 
-
-console.log("firebaseapp is initialized ",firebaseApp)
-
+//console.log("firebaseapp is initialized ",firebaseApp)
 const db = getFirestore(firebaseApp);
-
 console.log("firestoredb is connected ",db)
-//replace with your db collection name
-const colRef = collection(db, "db-test")
 
-async function add_data() {
-  //add data to firestore
+const colRef = collection(db, "db-test1")
 
-    await setDoc(doc(colRef, "SF_bg"), {
-        name: "San Francisco", state: "CA", country: "USA",
-        capital: false, population: 860000,
-        regions: ["west_coast", "norcal"] });
+var result;
 
+async function add_data( user_id, tabs ) {
+    var t = new Date().getTime();
+    /*await setDoc(doc(colRef, user_id), {
+        timestamp : t,
+        tabs: tabs
+    });*/
     console.log("data added");
 }
-add_data();
+
+function send_data_Interval(){
+    setInterval(send_data_to_firebase, 20000)
+}
+
+function send_data_to_firebase () {
+    get_data_from_storage( );
+    var user_id = "Himanshu_test_";
+    add_data(user_id,result);
+}
+
+function get_data_from_storage( ){
+
+    chrome.storage.local.get("tabs", function(item) {
+
+                result=[];
+                if (item["tabs"] !== undefined) {
+                    result = item["tabs"][0];
+                }
+                //console.log("stored tabs ",result);
+        });
+
+}
+
+send_data_Interval();
+
+//add_data();
 /*const searchButton = document.getElementById("trigger_fire");
 searchButton.addEventListener("click",()=>{
   add_data();

@@ -7,7 +7,6 @@ console.log("This prints to the console of the service worker (background script
 // Importing and using functionality from external files is also possible.
 importScripts('service-worker-utils.js')
 
-
 // If you want to import a file that is deeper in the file hierarchy of your
 // extension, simply do `importScripts('path/to/file.js')`.
 // The path should be relative to the file `manifest.json`.
@@ -127,7 +126,7 @@ function checkCurrentTab(){
 }
 
 function bgCheckInterval(){
-    setInterval(backgroundCheck, 5000)
+    setInterval(backgroundCheck, 20000)
 }
 
 async function getCurrentTab() {
@@ -148,11 +147,6 @@ function backgroundCheck() {
             console.log("current tab", activeTab)
             if (activeTab !== undefined /*&& activity.isValidPage(activeTab)*/) {
                 var activeUrl = activeTab.url;
-                // var tab = activity.getTab(activeUrl);
-                // if (tab === undefined) {
-                //     activity.addTab(activeTab);
-                // }
-                //const tabId = getTabId();
 
                 chrome.scripting.executeScript(
                     {
@@ -160,35 +154,19 @@ function backgroundCheck() {
                       files: ['./dist/bundle.js'],
                     },
                 );
+
                 var newTab = new Tab(activeUrl);
                 console.log("new tab val is ", newTab)
                 tabs.push(newTab);
-
+                //add_data( "himanshu_test", newTab );
                 storage.saveTabs(tabs);
 
-                console.log("active url is bg Check", activeUrl)
-                // if (activity.isInBlackList(activeUrl)) {
-                //     chrome.browserAction.setBadgeBackgroundColor({ color: '#FF0000' })
-                //     chrome.browserAction.setBadgeText({
-                //         tabId: activeTab.id,
-                //         text: 'n/a'
-                //     });
-                // } else {
-                //     if (tab !== undefined) {
-                //         if (!tab.url.isMatch(currentTab)) {
-                //             activity.setCurrentActiveTab(tab.url);
-                //         }
-                //         chrome.idle.queryState(parseInt(setting_interval_inactivity), function(state) {
-                //             if (state === 'active') {
-                //                 mainTRacker(activeUrl, tab, activeTab);
-                //             } else checkDOM(state, activeUrl, tab, activeTab);
-                //         });
-                //     }
-                // }
+                //console.log("active url is bg Check", activeUrl)
+
             }
         } else activity.closeIntervalForCurrentTab(true);
     });
 }
 
 loadTabs();
-bgCheckInterval()
+bgCheckInterval();
