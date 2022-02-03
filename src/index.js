@@ -14,45 +14,57 @@ const firebaseApp = initializeApp({
 
 //console.log("firebaseapp is initialized ",firebaseApp)
 const db = getFirestore(firebaseApp);
-console.log("firestoredb is connected ",db)
+//console.log("firestoredb is connected ",db)
 
 const colRef = collection(db, "db-test1")
 
-var result;
-
-async function add_data( user_id, tabs ) {
-    var t = new Date().getTime();
-    /*await setDoc(doc(colRef, user_id), {
-        timestamp : t,
-        tabs: tabs
-    });*/
+async function add_data( user_id, result ) {
+    console.log(result)
+    await setDoc(doc(colRef, user_id), {
+        user_id : user_id,
+        tabs: result
+    });
     console.log("data added");
 }
 
-function send_data_Interval(){
-    setInterval(send_data_to_firebase, 20000)
-}
-
 function send_data_to_firebase () {
-    get_data_from_storage( );
-    var user_id = "Himanshu_test_";
-    add_data(user_id,result);
-}
-
-function get_data_from_storage( ){
-
+    var result="";
     chrome.storage.local.get("tabs", function(item) {
-
-                result=[];
+                    if (item["tabs"] !== undefined) {
+                        //console.log(item["tabs"]);
+                        result = item["tabs"][100].url;
+                        //console.log(result)
+                    }
+    console.log(result)
+    var t = new Date().getTime();
+    var user_id = "Himanshu_test_"+t.toString();
+    add_data(user_id,result);
+});
+}
+/*
+function get_data_from_storage( ){
+    chrome.storage.local.get("tabs", function(item) {
+                var result="";
                 if (item["tabs"] !== undefined) {
-                    result = item["tabs"][0];
+                    result = item["tabs"][0].url;
+                    //console.log(result)
                 }
+                console.log(result)
+                //return result;
+
                 //console.log("stored tabs ",result);
         });
+}*/
 
-}
+chrome.runtime.onMessage.addListener(function(msg, sender, sendResponse) {
+   if (msg.action == 'SendIt') {
+      //console.log("Message received!");
+      send_data_to_firebase();
+      sendResponse({farewell: "goodbye"});
+   }
+});
 
-send_data_Interval();
+//send_data_Interval();
 
 export{
     firebaseApp
@@ -62,3 +74,5 @@ export{
 searchButton.addEventListener("click",()=>{
   add_data();
 })*/
+
+//

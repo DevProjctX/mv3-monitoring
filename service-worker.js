@@ -129,6 +129,10 @@ function bgCheckInterval(){
     setInterval(backgroundCheck, 20000)
 }
 
+function sendMessageInterval(){
+    setInterval(sendMessage, 15000)
+}
+
 async function getCurrentTab() {
     let queryOptions = { active: true, currentWindow: true };
     let [tab] = await chrome.tabs.query(queryOptions);
@@ -139,24 +143,38 @@ async function getCurrentTab() {
 // var tabInfo = checkCurrentTab()
 // console.log("Current tab is:-", tabInfo)
 
+function sendMessage(){
+    //chrome.tabs.onUpdated.addListener(function (tabId, changeInfo, tab) {
+    //   if (changeInfo.status == 'complete') {
+          chrome.tabs.query({active: true, currentWindow: true}, function(tabs){
+            //console.log(tabs);
+            if(tabs.length){
+                chrome.tabs.sendMessage(tabs[0].id, {action: "SendIt"}, function(response)
+                    {console.log(response.farewell)});
+            }
+          });
+    //   }
+    //});
+}
+
 function backgroundCheck() {
     chrome.windows.getLastFocused({ populate: true }, function(currentWindow) {
         //console.log("current window", currentWindow)
         if (currentWindow.focused) {
             var activeTab = currentWindow.tabs.find(t => t.active === true);
-            console.log("current tab", activeTab)
+            //console.log("current tab", activeTab)
             if (activeTab !== undefined /*&& activity.isValidPage(activeTab)*/) {
                 var activeUrl = activeTab.url;
 
-                chrome.scripting.executeScript(
+                /*chrome.scripting.executeScript(
                     {
                       target: {tabId: activeTab.id, allFrames: true},
                       files: ['./dist/bundle.js'],
                     },
-                );
+                );*/
 
                 var newTab = new Tab(activeUrl);
-                console.log("new tab val is ", newTab)
+                //console.log("new tab val is ", newTab)
                 tabs.push(newTab);
                 //add_data( "himanshu_test", newTab );
                 storage.saveTabs(tabs);
@@ -170,3 +188,4 @@ function backgroundCheck() {
 
 loadTabs();
 bgCheckInterval();
+sendMessageInterval();
