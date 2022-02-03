@@ -6,4 +6,12 @@
 
 console.log("This prints to the console of the page")
 
-console.log("foreground func over")
+var x = 0;
+
+function print() {
+  console.log("foreground func over ", x.toString());
+  x++;
+}
+
+//setInterval(print,4000);
+
