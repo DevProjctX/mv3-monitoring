@@ -1,8 +1,7 @@
 {
   "name": "mv3-monitoring",
   "version": "1.0.0",
-  "description": "Test",
-  "main": "index.js",
+  "description": "Employee monitoring for sabertechs",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "webpack"

@@ -10,9 +10,9 @@ module.exports = {
   // Using module bundlers we can add the required code for your extension
   // Any modular script should be added as entry point
   entry: {
-    firebase_config: './src/index.js',
+    firebase_config: './src/scripts/firebase.js',
     popup: './src/popup/popup.js',
-    main_script: './src/index.js',
+    main_script: './src/scripts/firebase.js',
     service_worker: './service-worker.js',
   },
   plugins: [

@@ -16,11 +16,11 @@ const firebaseApp = initializeApp({
   });
 
 const auth = getAuth(firebaseApp);
-//console.log("firebaseapp is initialized ",firebaseApp)
+console.log("firebaseapp is initialized")
 const db = getFirestore(firebaseApp);
-//console.log("firestoredb is connected ",db)
-
+console.log("firestoredb is connected ")
 const colRef = collection(db, "db-test1")
+console.log("firestore collection is fetched ")
 
 async function add_data( user_id, result ) {
     console.log(result)
@@ -32,16 +32,15 @@ async function add_data( user_id, result ) {
 }
 
 function send_data_to_firebase () {
+    console.log("send_data_to_firebase function is called")
     var result="";
     chrome.storage.local.get("tabs", function(item) {
                     if (item["tabs"] !== undefined) {
-                        //console.log(item["tabs"]);
                         result = item["tabs"][0].url;
-                        //console.log(result)
                     }
-    console.log(result)
+    var userId = auth.userId
     var t = new Date().getTime();
-    var user_id = "Himanshu_test_"+t.toString();
+    var user_id = userId;
     add_data(user_id,result);
 });
 }
