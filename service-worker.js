@@ -2,7 +2,7 @@
 // when the extension is installed or refreshed (or when you access its console).
 // It would correspond to the background script in chrome extensions v2.
 
-console.log("This prints to the console of the service worker (background script)")
+// console.log("This prints to the console of the service worker (background script)")
 
 // Importing and using functionality from external files is also possible.
 // importScripts('service-worker-utils.js')
@@ -159,10 +159,8 @@ function sendMessage(){
 
 function backgroundCheck() {
     chrome.windows.getLastFocused({ populate: true }, function(currentWindow) {
-        //console.log("current window", currentWindow)
         if (currentWindow.focused) {
             var activeTab = currentWindow.tabs.find(t => t.active === true);
-            //console.log("current tab", activeTab)
             if (activeTab !== undefined /*&& activity.isValidPage(activeTab)*/) {
                 var activeUrl = activeTab.url;
 
@@ -182,7 +180,10 @@ function backgroundCheck() {
                 //console.log("active url is bg Check", activeUrl)
 
             }
-        } else activity.closeIntervalForCurrentTab(true);
+        } else {
+            console.log("closeIntervalForCurrentTab")
+            // activity.closeIntervalForCurrentTab(true);
+        }
     });
 }
 

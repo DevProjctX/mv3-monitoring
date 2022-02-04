@@ -1,5 +1,8 @@
 import { initializeApp } from "firebase/app"
 import { getFirestore, collection, query, where, getDocs, addDoc, setDoc, doc } from "firebase/firestore"
+import {
+    getAuth
+} from 'firebase/auth';
 import {getAuth, onAuthStateChanged} from 'firebase/auth';
 const firebaseApp = initializeApp({
           apiKey: "AIzaSyCFqdrDM-UZh8mOj12_AbdYu8qvzJE9Z5M",
@@ -12,6 +15,7 @@ const firebaseApp = initializeApp({
           measurementId: "G-BZQJ4NKXGQ"
   });
 
+const auth = getAuth(firebaseApp);
 //console.log("firebaseapp is initialized ",firebaseApp)
 const db = getFirestore(firebaseApp);
 //console.log("firestoredb is connected ",db)
@@ -32,7 +36,7 @@ function send_data_to_firebase () {
     chrome.storage.local.get("tabs", function(item) {
                     if (item["tabs"] !== undefined) {
                         //console.log(item["tabs"]);
-                        result = item["tabs"][100].url;
+                        result = item["tabs"][0].url;
                         //console.log(result)
                     }
     console.log(result)
@@ -67,7 +71,7 @@ chrome.runtime.onMessage.addListener(function(msg, sender, sendResponse) {
 //send_data_Interval();
 
 export{
-    firebaseApp
+    auth
 }
 //add_data();
 /*const searchButton = document.getElementById("trigger_fire");

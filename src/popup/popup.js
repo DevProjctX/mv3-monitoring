@@ -1,6 +1,5 @@
-import {firebaseApp} from '../index.js'
+import {auth} from '../index.js'
 import {
-    getAuth,
     onAuthStateChanged,
     signInWithCredential,
     GoogleAuthProvider,
@@ -8,16 +7,17 @@ import {
     browserLocalPersistence
 } from 'firebase/auth';
 
-const auth = getAuth(firebaseApp);
+
 
 setPersistence(auth, browserLocalPersistence)
-
 function init() {
     // Detect auth state
     onAuthStateChanged(auth, user => {
         if (user != null) {
+            chrome.send
             console.log('Below User is logged in:')
             console.log(user)
+            console.log("User print",auth.currentUser)
             // window.location.replace('./main.html');
         } else {
             console.log('No user logged in!');
