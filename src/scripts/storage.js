@@ -1,6 +1,6 @@
 'use strict';
 
-class LocalStorage {
+export class LocalStorage {
 
     saveValue(name, value) {
         chrome.storage.local.set({
@@ -19,8 +19,4 @@ class LocalStorage {
     getMemoryUse(name, callback) {
         chrome.storage.local.getBytesInUse(name, callback);
     };
-}
-
-module.exports = {
-    LocalStorage
 }

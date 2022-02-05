@@ -1,1 +1,1 @@
-"use strict";class LocalStorage{saveValue(e,o){chrome.storage.local.set({[e]:o})}getValue(e,o){chrome.storage.local.get(e,(function(t){void 0!==t&&o(t[e])}))}getMemoryUse(e,o){chrome.storage.local.getBytesInUse(e,o)}}
+"use strict";export class LocalStorage{saveValue(e,o){chrome.storage.local.set({[e]:o})}getValue(e,o){chrome.storage.local.get(e,(function(t){void 0!==t&&o(t[e])}))}getMemoryUse(e,o){chrome.storage.local.getBytesInUse(e,o)}}

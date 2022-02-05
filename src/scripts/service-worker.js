@@ -10,7 +10,7 @@
 // If you want to import a file that is deeper in the file hierarchy of your
 // extension, simply do `importScripts('path/to/file.js')`.
 // The path should be relative to the file `manifest.json`.
-import {LocalStorage} from importScripts('./storage.js')
+import {LocalStorage} from "./storage.js"
 
 var storage = new LocalStorage();
 var userTimeline=[];
@@ -18,26 +18,38 @@ var trackUserInMillis = 2000
 var userId
 var projectId
 var USER_TIMELINE = "user_timeline"
+var USER_OFF_SCREEN = "user_off_screen"
 
 async function getCurrentTabUrl() {
-    let tab
+    let tabUrl = ""
     try {
         let queryOptions = { active: true, currentWindow: true };
-        [tab] = await chrome.tabs.query(queryOptions).url;   
+        let [tab] = await chrome.tabs.query(queryOptions);
+        if (tab == null){
+            tabUrl = USER_OFF_SCREEN
+        } else {
+            tabUrl = tab.url
+        };
     } catch (error) {
-        console.error(error)
-        tab = null
+        console.error(error);
     }
-    console.log("tracking tab", tab)
-    return tab;
+    console.log("tracking tab", tabUrl);
+    return tabUrl;
 }
 
 async function addTabToUserTimeline() {
-    var tab = await getCurrentTab()
-    var currentTabAndTimeArray = [tab.url, Date.now()]
+    var tabUrl = await getCurrentTabUrl()
+    var currentTabAndTimeArray = [tabUrl, Date.now()]
     userTimeline.push(currentTabAndTimeArray)
     storage.saveValue(USER_TIMELINE, userTimeline)
     console.log("Added tab and timestamp")
+}
+
+async function getCurrentTab() {
+    let queryOptions = { active: true, currentWindow: true };
+    let [tab] = await chrome.tabs.query(queryOptions);
+    console.log(tab, tab.url)
+    return tab;
 }
 
 function uploadData(){
