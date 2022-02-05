@@ -1,4 +1,4 @@
-import {auth} from '../index.js'
+import {auth} from './firebase.js'
 import {
     onAuthStateChanged,
     signInWithCredential,

@@ -3,7 +3,6 @@ import { getFirestore, collection, query, where, getDocs, addDoc, setDoc, doc } 
 import {
     getAuth
 } from 'firebase/auth';
-import {getAuth, onAuthStateChanged} from 'firebase/auth';
 const firebaseApp = initializeApp({
           apiKey: "AIzaSyCFqdrDM-UZh8mOj12_AbdYu8qvzJE9Z5M",
           authDomain: "personal-test-81fe1.firebaseapp.com",
