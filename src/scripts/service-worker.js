@@ -14,7 +14,7 @@ import {LocalStorage} from "./storage.js"
 
 var storage = new LocalStorage();
 var userTimeline=[];
-var trackUserInMillis = 2000
+var trackUserInMillis = 1000
 var userId
 var projectId
 var USER_TIMELINE = "user_timeline"
@@ -42,7 +42,8 @@ async function addTabToUserTimeline() {
     var currentTabAndTimeArray = [tabUrl, Date.now()]
     userTimeline.push(currentTabAndTimeArray)
     storage.saveValue(USER_TIMELINE, userTimeline)
-    console.log("Added tab and timestamp")
+    console.log("Added tab and timestamp to localstorage")
+    showUserActivity()
 }
 
 async function getCurrentTab() {
@@ -70,4 +71,18 @@ function trackCurrentActivity(){
     setInterval(addTabToUserTimeline, trackUserInMillis)
 }
 
+function showUserActivity(){
+    storage.getValue(USER_TIMELINE, function(item){
+        console.log("value in USER_TIMELINE", item)
+    })
+    getMemoryUsed()
+}
+
+function getMemoryUsed(){
+    storage.getMemoryUse(USER_TIMELINE, function (memoryInBytes) {
+        console.log((memoryInBytes/1024).toFixed(2) + 'Kb');
+    });
+}
+
 trackCurrentActivity()
+// setInterval(showUserActivity(), 10000)
