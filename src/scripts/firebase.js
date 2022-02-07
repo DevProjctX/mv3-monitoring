@@ -16,13 +16,12 @@ const firebaseApp = initializeApp({
 
 const auth = getAuth(firebaseApp);
 console.log("firebaseapp is initialized")
-const db = getFirestore(firebaseApp);
+const firestore = getFirestore(firebaseApp);
 console.log("firestoredb is connected ")
-const colRef = collection(db, "db-test1")
+const colRef = collection(firestore, "db-test1")
 console.log("firestore collection is fetched ")
 
 async function add_data( user_id, result ) {
-    console.log(result)
     await setDoc(doc(colRef, user_id), {
         user_id : user_id,
         tabs: result
@@ -69,7 +68,9 @@ chrome.runtime.onMessage.addListener(function(msg, sender, sendResponse) {
 //send_data_Interval();
 
 export{
-    auth
+    auth,
+    firestore,
+    add_data
 }
 //add_data();
 /*const searchButton = document.getElementById("trigger_fire");

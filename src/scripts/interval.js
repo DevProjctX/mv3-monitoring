@@ -12,7 +12,7 @@ class CurrentWindowTrack {
     }
 
     // closeInterval() {
-    //     var today = new Date();
+        //     var today = new Date();
     //     var stringDate = today.getHours() + ':' + today.getMinutes() + ':' + today.getSeconds();
     //     var currentInterval = this.intervals[this.intervals.length - 1];
     //     if (currentInterval != undefined) {

@@ -11,10 +11,13 @@
 // extension, simply do `importScripts('path/to/file.js')`.
 // The path should be relative to the file `manifest.json`.
 import {LocalStorage} from "./storage.js"
+import {Url} from "./url.js"
+import {firestore, add_data} from "./firebase.js"
 
 var storage = new LocalStorage();
 var userTimeline=[];
-var trackUserInMillis = 1000
+var trackUserInMillis = 10000
+var uploadDataInMillis = 10000
 var userId
 var projectId
 var USER_TIMELINE = "user_timeline"
@@ -38,8 +41,9 @@ async function getCurrentTabUrl() {
 }
 
 async function addTabToUserTimeline() {
-    var tabUrl = await getCurrentTabUrl()
-    var currentTabAndTimeArray = [tabUrl, Date.now()]
+    var url = new Url(await getCurrentTabUrl());
+    var urlHost = url.host
+    var currentTabAndTimeArray = [urlHost, Date.now()]
     userTimeline.push(currentTabAndTimeArray)
     storage.saveValue(USER_TIMELINE, userTimeline)
     console.log("Added tab and timestamp to localstorage")
@@ -53,18 +57,36 @@ async function getCurrentTab() {
     return tab;
 }
 
-function uploadData(){
-    //chrome.tabs.onUpdated.addListener(function (tabId, changeInfo, tab) {
-    //   if (changeInfo.status == 'complete') {
-          chrome.tabs.query({active: true, currentWindow: true}, function(tabs){
-            //console.log(tabs);
-            if(tabs.length){
-                chrome.tabs.sendMessage(tabs[0].id, {action: "SendIt"}, function(response)
-                    {console.log(response.farewell)});
-            }
-          });
-    //   }
-    //});
+// function uploadData(){
+//     firestore
+//     //chrome.tabs.onUpdated.addListener(function (tabId, changeInfo, tab) {
+//     //   if (changeInfo.status == 'complete') {
+//           chrome.tabs.query({active: true, currentWindow: true}, function(tabs){
+//             //console.log(tabs);
+//             if(tabs.length){
+//                 chrome.tabs.sendMessage(tabs[0].id, {action: "SendIt"}, function(response)
+//                     {console.log(response.farewell)});
+//             }
+//           });
+//     //   }
+//     //});
+// }
+
+console.log("firestore collection is fetched ", firestore)
+
+async function addData() {
+    console.log("Adding data")
+    
+    storage.getValue(USER_TIMELINE, function(item){
+        console.log("uploadingData", item)
+        chrome.identity.getProfileUserInfo((userInfo) => {
+            userId = userInfo
+            console.log(item)
+            console.log(userInfo)
+            add_data("user_id8Feb", item)
+        });
+    })
+    console.log("data added");
 }
 
 function trackCurrentActivity(){
@@ -84,5 +106,10 @@ function getMemoryUsed(){
     });
 }
 
+function uploadData(){
+    setInterval(addData, uploadDataInMillis)
+}
+
 trackCurrentActivity()
+uploadData()
 // setInterval(showUserActivity(), 10000)
