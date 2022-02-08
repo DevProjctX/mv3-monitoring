@@ -29,11 +29,11 @@ module.exports = {
     //   filename: "options.html",
     //   chunks: ["options"] // This is script from entry point
     // }),
-    // new HtmlWebpackPlugin({
-    //   template: path.join(__dirname, "src", "popup", "main.html"),
-    //   filename: "main.html",
-    //   chunks: ["main_script"] // This is script from entry point
-    // }),
+    new HtmlWebpackPlugin({
+      template: path.join(__dirname, "src", "html", "loggedIn.html"),
+      filename: "loggedIn.html",
+      chunks: ["loggedIn"] // This is script from entry point
+    }),
     // Note: This is to copy any remaining files to bundler
     new CopyWebpackPlugin({
       patterns: [
