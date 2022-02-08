@@ -1,5 +1,5 @@
 import { initializeApp } from "firebase/app"
-import { getFirestore, collection, query, where, getDocs, addDoc, setDoc, doc } from "firebase/firestore"
+import { getFirestore, collection, query, where, getDocs, addDoc, setDoc, serverTimestamp } from "firebase/firestore"
 import {
     getAuth
 } from 'firebase/auth';
@@ -22,11 +22,12 @@ const colRef = collection(firestore, "db-test1")
 console.log("firestore collection is fetched ")
 
 async function add_data( user_id, result ) {
-    await setDoc(doc(colRef, user_id), {
+    var docId = await addDoc(collection(firestore, "db-test1"), {
         user_id : user_id,
-        tabs: result
+        tabs: result,
+        timeStamp: serverTimestamp()
     });
-    console.log("data added");
+    return docId
 }
 
 function send_data_to_firebase () {

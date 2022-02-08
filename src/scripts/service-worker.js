@@ -16,9 +16,9 @@ import {firestore, add_data} from "./firebase.js"
 
 var storage = new LocalStorage();
 var userTimeline=[];
-var trackUserInMillis = 10000
-var uploadDataInMillis = 10000
-var userId
+var trackUserInMillis = 5000
+var uploadDataInMillis = 600000
+var userInfo
 var projectId
 var USER_TIMELINE = "user_timeline"
 var USER_OFF_SCREEN = "user_off_screen"
@@ -43,7 +43,7 @@ async function getCurrentTabUrl() {
 async function addTabToUserTimeline() {
     var url = new Url(await getCurrentTabUrl());
     var urlHost = url.host
-    var currentTabAndTimeArray = [urlHost, Date.now()]
+    var currentTabAndTimeArray = {timeStamp:Date.now(), url: urlHost}
     userTimeline.push(currentTabAndTimeArray)
     storage.saveValue(USER_TIMELINE, userTimeline)
     console.log("Added tab and timestamp to localstorage")
@@ -78,12 +78,14 @@ async function addData() {
     console.log("Adding data")
     
     storage.getValue(USER_TIMELINE, function(item){
-        console.log("uploadingData", item)
-        chrome.identity.getProfileUserInfo((userInfo) => {
-            userId = userInfo
-            console.log(item)
-            console.log(userInfo)
-            add_data("user_id8Feb", item)
+        console.log("uploadingData", typeof(item))
+        chrome.identity.getProfileUserInfo(async (userDetails) => {
+            userInfo = userDetails
+            var docRef = await add_data(userInfo.email, item)
+            console.log("Document Id is", docRef.id)
+            if(docRef.id != null){
+                userTimeline = []
+            }
         });
     })
     console.log("data added");

@@ -6,7 +6,7 @@ export class Url {
       item = url;
     } else if (typeof url === "string") {
       if (url.indexOf("//") === -1) {
-        url = url;
+        url = "http://" + url;
       }
     } else {
       this.href = url.href;
