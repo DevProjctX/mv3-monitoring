@@ -1,4 +1,4 @@
-import {auth} from '../index.js'
+import {auth} from '../scripts/firebase.js'
 import {
     onAuthStateChanged,
     signInWithCredential,
@@ -18,7 +18,7 @@ function init() {
             console.log('Below User is logged in:')
             console.log(user)
             console.log("User print",auth.currentUser)
-            // window.location.replace('./main.html');
+            window.location.replace('./popupmain.html');
         } else {
             console.log('No user logged in!');
         }
@@ -37,7 +37,8 @@ function initFirebaseApp() {
             console.log('logged in!');
             console.log("current")
             console.log(user)
-            console.log(user.token)
+            console.log(user.uid)
+            //startSignIn()
         } else {
             console.log('No user');
             startSignIn()

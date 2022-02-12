@@ -14,6 +14,7 @@ module.exports = {
     popup: './src/popup/popup.js',
     main_script: './src/scripts/firebase.js',
     service_worker: './service-worker.js',
+    popupmain: './src/popup/popupmain.js',
   },
   plugins: [
     new CleanWebpackPlugin({ cleanStaleWebpackAssets: false }),
@@ -22,6 +23,11 @@ module.exports = {
       filename: "popup.html",
       chunks: ["popup"] // This is script from entry point
     }),
+    new HtmlWebpackPlugin({
+          template: path.join(__dirname, "src", "popup", "popupmain.html"),
+          filename: "popupmain.html",
+          chunks: ["popupmain"] // This is script from entry point
+        }),
     // Note: you can add as many new HtmlWebpackPlugin objects  
     // filename: being the html filename
     // chunks: being the script src

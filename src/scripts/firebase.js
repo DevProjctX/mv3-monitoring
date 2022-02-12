@@ -1,8 +1,5 @@
 import { initializeApp } from "firebase/app"
 import { getFirestore, collection, query, where, getDocs, addDoc, setDoc, doc } from "firebase/firestore"
-import {
-    getAuth
-} from 'firebase/auth';
 import {getAuth, onAuthStateChanged} from 'firebase/auth';
 const firebaseApp = initializeApp({
           apiKey: "AIzaSyCFqdrDM-UZh8mOj12_AbdYu8qvzJE9Z5M",
@@ -16,11 +13,11 @@ const firebaseApp = initializeApp({
   });
 
 const auth = getAuth(firebaseApp);
-console.log("firebaseapp is initialized")
+//console.log("firebaseapp is initialized")
 const db = getFirestore(firebaseApp);
-console.log("firestoredb is connected ")
+//console.log("firestoredb is connected ")
 const colRef = collection(db, "db-test1")
-console.log("firestore collection is fetched ")
+//console.log("firestore collection is fetched ")
 
 async function add_data( user_id, result ) {
     console.log(result)
@@ -38,11 +35,13 @@ function send_data_to_firebase () {
                     if (item["tabs"] !== undefined) {
                         result = item["tabs"][0].url;
                     }
+
     var userId = auth.userId
     var t = new Date().getTime();
     var user_id = userId;
     add_data(user_id,result);
-});
+
+    });
 }
 /*
 function get_data_from_storage( ){

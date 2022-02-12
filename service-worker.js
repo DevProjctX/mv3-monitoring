@@ -11,6 +11,8 @@
 // extension, simply do `importScripts('path/to/file.js')`.
 // The path should be relative to the file `manifest.json`.
 
+var proctoringFlag = 0;
+
 class Tab {
     constructor(url, days, summary, counter) {
         this.url = url;
@@ -126,7 +128,7 @@ function checkCurrentTab(){
 }
 
 function bgCheckInterval(){
-    setInterval(backgroundCheck, 20000)
+    if(proctoringFlag==1){setInterval(backgroundCheck, 20000)}
 }
 
 function sendMessageInterval(){
@@ -140,45 +142,38 @@ async function getCurrentTab() {
     return tab;
 }
 
-// var tabInfo = checkCurrentTab()
-// console.log("Current tab is:-", tabInfo)
-
 function sendMessage(){
-    //chrome.tabs.onUpdated.addListener(function (tabId, changeInfo, tab) {
-    //   if (changeInfo.status == 'complete') {
           chrome.tabs.query({active: true, currentWindow: true}, function(tabs){
-            //console.log(tabs);
             if(tabs.length){
                 chrome.tabs.sendMessage(tabs[0].id, {action: "SendIt"}, function(response)
                     {console.log(response.farewell)});
             }
           });
-    //   }
-    //});
+}
+
+function popupconnection(){
+    chrome.runtime.onConnect.addListener(function(port) {
+          console.log("Connected .....");
+          port.onMessage.addListener(function(msg) {
+               console.log("message recieved" + msg);
+               port.postMessage("Hi Popup.js");
+               if(msg=="StartProject")
+                    proctoringFlag=1;
+               else
+                    proctoringFlag=0;
+          });
+     })
 }
 
 function backgroundCheck() {
     chrome.windows.getLastFocused({ populate: true }, function(currentWindow) {
-        if (currentWindow.focused) {
+        if (currentWindow.focused && navigator.onLine) {
             var activeTab = currentWindow.tabs.find(t => t.active === true);
             if (activeTab !== undefined /*&& activity.isValidPage(activeTab)*/) {
                 var activeUrl = activeTab.url;
-
-                /*chrome.scripting.executeScript(
-                    {
-                      target: {tabId: activeTab.id, allFrames: true},
-                      files: ['./dist/bundle.js'],
-                    },
-                );*/
-
                 var newTab = new Tab(activeUrl);
-                //console.log("new tab val is ", newTab)
                 tabs.push(newTab);
-                //add_data( "himanshu_test", newTab );
-                storage.saveTabs(tabs);
-
-                //console.log("active url is bg Check", activeUrl)
-
+                //storage.saveTabs(tabs);
             }
         } else {
             console.log("closeIntervalForCurrentTab")
@@ -189,4 +184,5 @@ function backgroundCheck() {
 
 loadTabs();
 bgCheckInterval();
-sendMessageInterval();
+popupconnection();
+//sendMessageInterval();
