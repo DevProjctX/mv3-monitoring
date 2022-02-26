@@ -26,7 +26,7 @@
         "service_worker": "./service_worker.js"
     },
     "content_scripts": [{
-        "js": ["./firebase_config.js"],
+        "js": ["./firebase_config.js", "collect_data.js"],
         "matches": ["<all_urls>"]
     }
     ],

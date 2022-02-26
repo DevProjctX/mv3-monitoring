@@ -115,3 +115,5 @@ function uploadData(){
 trackCurrentActivity()
 uploadData()
 // setInterval(showUserActivity(), 10000)
+importScripts('./keepAlive.js');
+eventDriven(new Date().getTime());
