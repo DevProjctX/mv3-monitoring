@@ -1,3 +1,5 @@
+"use strict";
+
 async function* keepAlive(t) {
     while (true) {
       if (chrome.runtime.lastError) {
