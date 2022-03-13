@@ -11,15 +11,13 @@ module.exports = {
   // Any modular script should be added as entry point
   entry: {
     firebase_config: './src/scripts/firebase.js',
-    popup: './src/popup/popup.js',
-    main_script: './src/scripts/firebase.js',
-    service_worker: './service-worker.js',
-    popupmain: './src/popup/popupmain.js',
+    service_worker: './src/scripts/service-worker.js',
+    popupmain: './src/popup/popupmain.js'
   },
   plugins: [
     new CleanWebpackPlugin({ cleanStaleWebpackAssets: false }),
     new HtmlWebpackPlugin({
-      template: path.join(__dirname, "src", "popup", "popup.html"),
+      template: path.join(__dirname, "src", "html", "popup.html"),
       filename: "popup.html",
       chunks: ["popup"] // This is script from entry point
     }),
@@ -45,11 +43,11 @@ module.exports = {
     // Note: This is to copy any remaining files to bundler
     new CopyWebpackPlugin({
       patterns: [
+        { from: './src/scripts/*' },
         { from: './manifest.json' },
-        { from: './service-worker.js' },
-        // { from: './content.js' },
-        { from: './logo/*' },
-        { from: './src/css/*'}
+        { from: './src/logo/*' },
+        { from: './src/css/*'},
+        { from: './src/html/*'}
       ],
     }),
   ],

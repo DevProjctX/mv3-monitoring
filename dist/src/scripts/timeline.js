@@ -1,0 +1,1 @@
+"use strict";class CurrentWindowTrack{constructor(r,t){this.url=new Url(t)}currentTrack(r){var t=(new Date).getTime;this.intervals.push(r,t)}}

@@ -1,6 +1,8 @@
 import { initializeApp } from "firebase/app"
-import { getFirestore, collection, query, where, getDocs, addDoc, setDoc, doc } from "firebase/firestore"
-import {getAuth, onAuthStateChanged} from 'firebase/auth';
+import { getFirestore, collection, query, where, getDocs, addDoc, setDoc, serverTimestamp } from "firebase/firestore"
+import {
+    getAuth
+} from 'firebase/auth';
 const firebaseApp = initializeApp({
           apiKey: "AIzaSyCFqdrDM-UZh8mOj12_AbdYu8qvzJE9Z5M",
           authDomain: "personal-test-81fe1.firebaseapp.com",
@@ -13,19 +15,19 @@ const firebaseApp = initializeApp({
   });
 
 const auth = getAuth(firebaseApp);
-//console.log("firebaseapp is initialized")
-const db = getFirestore(firebaseApp);
-//console.log("firestoredb is connected ")
-const colRef = collection(db, "db-test1")
-//console.log("firestore collection is fetched ")
+console.log("firebaseapp is initialized")
+const firestore = getFirestore(firebaseApp);
+console.log("firestoredb is connected ")
+const colRef = collection(firestore, "db-test1")
+console.log("firestore collection is fetched ")
 
 async function add_data( user_id, result ) {
-    console.log(result)
-    await setDoc(doc(colRef, user_id), {
+    var docId = await addDoc(collection(firestore, "db-test1"), {
         user_id : user_id,
-        tabs: result
+        tabs: result,
+        timeStamp: serverTimestamp()
     });
-    console.log("data added");
+    return docId
 }
 
 function send_data_to_firebase () {
@@ -69,7 +71,9 @@ chrome.runtime.onMessage.addListener(function(msg, sender, sendResponse) {
 //send_data_Interval();
 
 export{
-    auth
+    auth,
+    firestore,
+    add_data
 }
 //add_data();
 /*const searchButton = document.getElementById("trigger_fire");

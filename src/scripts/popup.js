@@ -1,4 +1,4 @@
-import {auth} from '../scripts/firebase.js'
+import {auth} from './firebase.js'
 import {
     onAuthStateChanged,
     signInWithCredential,
@@ -27,6 +27,7 @@ function init() {
 init();
 
 document.querySelector('.btn__google').addEventListener('click', () => {
+    console.log("initFirebaseApp called")
     initFirebaseApp()
 });
 
@@ -53,6 +54,7 @@ function startSignIn() {
     console.log("started SignIn")
     //https://firebase.google.com/docs/auth/web/manage-users
     const user = auth.currentUser;
+    console.log(user)
     if (user) {
         console.log("current")
         console.log(user)

@@ -4,19 +4,20 @@
     "description": "Chrome extension to monitor Sabertechs freelancers activity while they are doing a project",
     "version": "0.0.1",
     "icons": {
-        "16": "./logo/logo-16.png",
-        "48": "./logo/logo-48.png",
-        "128": "./logo/logo-128.png"
+        "16": "./src/logo/logo-16.png",
+        "48": "./src/logo/logo-48.png",
+        "128": "./src/logo/logo-128.png"
     },
     "action": {
         "default_title": "Login for sabertechs freelancers",
-        "default_popup": "./popup.html"
+        "default_popup": "./src/html/popup.html"
     },
     "permissions": [
         "tabs",
         "storage",
         "scripting",
-        "identity"
+        "identity",
+        "identity.email"
     ],
     "host_permissions": [
         "*://*/*"
@@ -25,7 +26,7 @@
         "service_worker": "./service_worker.js"
     },
     "content_scripts": [{
-        "js": ["./main_script.js"],
+        "js": ["./firebase_config.js", "./src/scripts/collect_data.js"],
         "matches": ["<all_urls>"]
     }
     ],
