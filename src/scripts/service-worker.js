@@ -37,7 +37,7 @@ async function getCurrentTabUrl() {
     } catch (error) {
         console.error(error);
     }
-    console.log("tracking tab", tabUrl);
+    // console.log("tracking tab", tabUrl);
     return tabUrl;
 }
 
@@ -54,7 +54,7 @@ async function addTabToUserTimeline() {
 async function getCurrentTab() {
     let queryOptions = { active: true, currentWindow: true };
     let [tab] = await chrome.tabs.query(queryOptions);
-    console.log(tab, tab.url)
+    // console.log(tab, tab.url)
     return tab;
 }
 
@@ -73,13 +73,13 @@ async function getCurrentTab() {
 //     //});
 // }
 
-console.log("firestore collection is fetched ", firestore)
+console.log("firestore collection is fetched SW", firestore)
 
 async function addData() {
-    console.log("Adding data")
+    // console.log("Adding data")
     
     storage.getValue(USER_TIMELINE, function(item){
-        console.log("uploadingData", typeof(item))
+        // console.log("uploadingData", typeof(item))
         chrome.identity.getProfileUserInfo(async (userDetails) => {
             userInfo = userDetails
             var docRef = await add_data(userInfo.email, item)
@@ -89,7 +89,7 @@ async function addData() {
             }
         });
     })
-    console.log("data added");
+    // console.log("data added");
 }
 
 function trackCurrentActivity(){
@@ -98,14 +98,14 @@ function trackCurrentActivity(){
 
 function showUserActivity(){
     storage.getValue(USER_TIMELINE, function(item){
-        console.log("value in USER_TIMELINE", item)
+        // console.log("value in USER_TIMELINE", item)
     })
     getMemoryUsed()
 }
 
 function getMemoryUsed(){
     storage.getMemoryUse(USER_TIMELINE, function (memoryInBytes) {
-        console.log((memoryInBytes/1024).toFixed(2) + 'Kb');
+        // console.log((memoryInBytes/1024).toFixed(2) + 'Kb');
     });
 }
 

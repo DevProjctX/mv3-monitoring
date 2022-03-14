@@ -11,12 +11,13 @@ module.exports = {
   // Any modular script should be added as entry point
   entry: {
     firebase_config: './src/scripts/firebase.js',
-    service_worker: './src/scripts/service-worker.js'
+    service_worker: './src/scripts/service-worker.js',
+    popup: './src/popup/popup.js'
   },
   plugins: [
     new CleanWebpackPlugin({ cleanStaleWebpackAssets: false }),
     new HtmlWebpackPlugin({
-      template: path.join(__dirname, "src", "html", "popup.html"),
+      template: path.join(__dirname, "src", "popup", "popup.html"),
       filename: "popup.html",
       chunks: ["popup"] // This is script from entry point
     }),
@@ -40,8 +41,8 @@ module.exports = {
         { from: './src/scripts/*' },
         { from: './manifest.json' },
         { from: './src/logo/*' },
-        { from: './src/css/*'},
-        { from: './src/html/*'}
+        { from: './src/css/*'}
+        // { from: './src/html/*'}
       ],
     }),
   ],
