@@ -21,30 +21,31 @@ console.log("firestoredb is connected ")
 const colRef = collection(firestore, "db-test1")
 console.log("firestore collection is fetched ")
 
-async function add_data( user_id, result ) {
+async function add_data( user_id, result, projectIdFunc) {
     var docId = await addDoc(collection(firestore, "db-test1"), {
         user_id : user_id,
         tabs: result,
-        timeStamp: serverTimestamp()
+        timeStamp: serverTimestamp(),
+        projectId: projectIdFunc
     });
     return docId
 }
 
-function send_data_to_firebase () {
-    console.log("send_data_to_firebase function is called")
-    var result="";
-    chrome.storage.local.get("tabs", function(item) {
-                    if (item["tabs"] !== undefined) {
-                        result = item["tabs"][0].url;
-                    }
+// function send_data_to_firebase () {
+//     console.log("send_data_to_firebase function is called")
+//     var result="";
+//     chrome.storage.local.get("tabs", function(item) {
+//                     if (item["tabs"] !== undefined) {
+//                         result = item["tabs"][0].url;
+//                     }
 
-    var userId = auth.userId
-    var t = new Date().getTime();
-    var user_id = userId;
-    add_data(user_id,result);
+//     var userId = auth.userId
+//     var t = new Date().getTime();
+//     var user_id = userId;
+//     add_data(user_id,result);
 
-    });
-}
+//     });
+// }
 /*
 function get_data_from_storage( ){
     chrome.storage.local.get("tabs", function(item) {
@@ -60,13 +61,13 @@ function get_data_from_storage( ){
         });
 }*/
 
-chrome.runtime.onMessage.addListener(function(msg, sender, sendResponse) {
-   if (msg.action == 'SendIt') {
-      //console.log("Message received!");
-      send_data_to_firebase();
-      sendResponse({farewell: "goodbye"});
-   }
-});
+// chrome.runtime.onMessage.addListener(function(msg, sender, sendResponse) {
+//    if (msg.action == 'SendIt') {
+//       //console.log("Message received!");
+//       send_data_to_firebase();
+//       sendResponse({farewell: "goodbye"});
+//    }
+// });
 
 //send_data_Interval();
 

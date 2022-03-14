@@ -16,6 +16,10 @@ export class LocalStorage {
         });
     }
 
+    removeValue(name){
+        chrome.storage.local.remove(name);
+    }
+
     getMemoryUse(name, callback) {
         chrome.storage.local.getBytesInUse(name, callback);
     };

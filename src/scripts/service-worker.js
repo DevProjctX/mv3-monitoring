@@ -23,6 +23,7 @@ var userInfo
 var projectId
 var USER_TIMELINE = "user_timeline"
 var USER_OFF_SCREEN = "user_off_screen"
+var PROJECT_ID = "projectId"
 
 async function getCurrentTabUrl() {
     let tabUrl = ""
@@ -42,13 +43,21 @@ async function getCurrentTabUrl() {
 }
 
 async function addTabToUserTimeline() {
+  storage.getValue(PROJECT_ID, function(item){
+    console.log(item);
+    projectId = item
+  })
+  console.log(`projectId in addTabToUserTimeline ${projectId}`)
+  if(projectId != undefined){
     var url = new Url(await getCurrentTabUrl());
     var urlHost = url.host
+    // TODO improve the next statement
     var currentTabAndTimeArray = {timeStamp:Date.now(), url: urlHost}
     userTimeline.push(currentTabAndTimeArray)
     storage.saveValue(USER_TIMELINE, userTimeline)
     console.log("Added tab and timestamp to localstorage")
     showUserActivity()
+  }
 }
 
 async function getCurrentTab() {
@@ -58,38 +67,30 @@ async function getCurrentTab() {
     return tab;
 }
 
-// function uploadData(){
-//     firestore
-//     //chrome.tabs.onUpdated.addListener(function (tabId, changeInfo, tab) {
-//     //   if (changeInfo.status == 'complete') {
-//           chrome.tabs.query({active: true, currentWindow: true}, function(tabs){
-//             //console.log(tabs);
-//             if(tabs.length){
-//                 chrome.tabs.sendMessage(tabs[0].id, {action: "SendIt"}, function(response)
-//                     {console.log(response.farewell)});
-//             }
-//           });
-//     //   }
-//     //});
-// }
-
 console.log("firestore collection is fetched SW", firestore)
 
 async function addData() {
     // console.log("Adding data")
-    
-    storage.getValue(USER_TIMELINE, function(item){
-        // console.log("uploadingData", typeof(item))
-        chrome.identity.getProfileUserInfo(async (userDetails) => {
-            userInfo = userDetails
-            var docRef = await add_data(userInfo.email, item)
-            console.log("Document Id is", docRef.id)
-            if(docRef.id != null){
-                userTimeline = []
-            }
-        });
-    })
+    storage.getValue(PROJECT_ID, function(item){projectId = item})
+    console.log(`addData ${projectId}`);
+    if(projectId != undefined){
+      addDataWithProjectId(projectId)
+    }
     // console.log("data added");
+}
+
+async function addDataWithProjectId(projectIdFunc){
+  storage.getValue(USER_TIMELINE, function(item){
+    // console.log("uploadingData", typeof(item))
+    chrome.identity.getProfileUserInfo(async (userDetails) => {
+        userInfo = userDetails
+        var docRef = await add_data(userInfo.email, item, projectIdFunc)
+        console.log("Document Id is", docRef.id)
+        if(docRef.id != null){
+            userTimeline = []
+        }
+    });
+  })
 }
 
 function trackCurrentActivity(){
@@ -127,6 +128,24 @@ chrome.runtime.onConnect.addListener(port => {
     lifeline = port;
     setTimeout(keepAliveForced, 295e3); // 5 minutes minus 5 seconds
     port.onDisconnect.addListener(keepAliveForced);
+  }
+  if(port.name === 'StartProject'){
+    port.onMessage.addListener(function(msg){
+      storage.saveValue(PROJECT_ID, msg);
+      console.log(`item set ${msg}`)
+    })
+  }
+  if(port.name === 'StopProject'){
+    storage.getValue(PROJECT_ID, function(item){
+      projectId = item
+    })
+    if(projectId != undefined){
+      console.log(`addDataWithProjectId ${projectId}`);
+      addDataWithProjectId(projectId)
+    }
+    storage.removeValue(PROJECT_ID);
+    projectId = undefined;
+    console.log('PROJECT STOPPED');
   }
 });
 

@@ -18,7 +18,15 @@ function init() {
             console.log('Below User is logged in:')
             console.log(user)
             console.log("User print",auth.currentUser)
-            window.location.replace('./popupmain.html');
+            chrome.storage.local.get(['projectinfo'], function(result){
+                console.log('inside get function');
+                console.log(result);
+                if(result.projectinfo != undefined){
+                    window.location.replace('./popupStopProject.html');        
+                } else{
+                    window.location.replace('./popupStartProject.html');
+                }
+            });
         } else {
             console.log('No user logged in!');
         }
