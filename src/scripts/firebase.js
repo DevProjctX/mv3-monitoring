@@ -75,10 +75,3 @@ export{
     firestore,
     add_data
 }
-//add_data();
-/*const searchButton = document.getElementById("trigger_fire");
-searchButton.addEventListener("click",()=>{
-  add_data();
-})*/
-
-//

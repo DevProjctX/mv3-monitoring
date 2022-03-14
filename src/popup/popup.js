@@ -1,4 +1,4 @@
-import {auth} from './firebase.js'
+import {auth} from '../scripts/firebase.js'
 import {
     onAuthStateChanged,
     signInWithCredential,
@@ -27,12 +27,13 @@ function init() {
 init();
 
 document.querySelector('.btn__google').addEventListener('click', () => {
-    console.log("initFirebaseApp called")
+    console.log("initFirebaseApp called btn_google")
     initFirebaseApp()
 });
 
 function initFirebaseApp() {
     // Detect auth state
+    console.log('initFirebaseApp onAuthStateChanged')
     onAuthStateChanged(auth, user => {
         if (user != null) {
             console.log('logged in!');
