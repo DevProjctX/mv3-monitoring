@@ -2,24 +2,29 @@
 
 export class Url {
   constructor(url) {
-    if (url instanceof URL) {
-      item = url;
-    } else if (typeof url === "string") {
-      if (url.indexOf("//") === -1) {
-        url = "http://" + url;
+    try {
+      if (url instanceof URL) {
+        item = url;
+      } else if (typeof url === "string") {
+        if (url.indexOf("//") === -1) {
+          url = "http://" + url;
+        }
+      } else {
+        this.href = url.href;
+        this.host = url.host;
+        this.path = url.path;
+        return;
       }
-    } else {
-      this.href = url.href;
-      this.host = url.host;
-      this.path = url.path;
-      return;
+  
+      var item = new URL(url);
+  
+      this.href = item.href;
+      this.host = item.hostname;
+      this.path = item.pathname === "/" ? "" : item.pathname; 
+    } catch (error) {
+      console.log(`URL error ${url}`);
+      console.error(error);
     }
-
-    var item = new URL(url);
-
-    this.href = item.href;
-    this.host = item.hostname;
-    this.path = item.pathname === "/" ? "" : item.pathname;
   }
 
   isMatch(url) {

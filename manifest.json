@@ -36,7 +36,8 @@
           "https://www.googleapis.com/auth/userinfo.email",
           "https://www.googleapis.com/auth/userinfo.profile"
         ]
-      },
+      }
+      ,
       "key": "-----BEGIN PUBLIC KEY-----
       MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAkdr18KNIXaRBEluO+toh
       Z2VGgFmrJM/o4eNx1UpLs8v6HeX2DHvDZr32+AzdKqFmCMuFjDSsdcpDbcdvGZKf

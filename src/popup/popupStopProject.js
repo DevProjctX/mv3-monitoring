@@ -47,9 +47,9 @@ window.addEventListener('load',() => {
 
 function pingSWtoStop(){
     var port = chrome.runtime.connect({
-          name: "StopProject"
-        });
-    port.postMessage("StopProject1");
+        name: "StopProject"
+    });
+    port.postMessage("StopProject");
     port.onMessage.addListener(function(msg) {
         console.log("message recieved" + msg);
     });

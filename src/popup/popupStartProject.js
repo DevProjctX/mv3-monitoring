@@ -43,7 +43,8 @@ function pingSWtoStart(projectid){
     var port = chrome.runtime.connect({
         name: "StartProject"
     });
-    port.postMessage(projectid);
+    var user = auth.currentUser;
+    port.postMessage({projectId: projectid, userId: user.uid, userEmail: user.email});
     port.onMessage.addListener(function(msg) {
         console.log("message recieved" + msg);
     });

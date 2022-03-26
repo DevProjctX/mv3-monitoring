@@ -24,7 +24,7 @@ async function* keepAlive(t) {
 
 async function eventDriven(t) {
     for await (const _ of keepAlive(t)) {
-      console.log("eventDroiven", _);
+      console.log("eventDriven", _);
     }
   }
   

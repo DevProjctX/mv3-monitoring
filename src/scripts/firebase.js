@@ -1,5 +1,5 @@
 import { initializeApp } from "firebase/app"
-import { getFirestore, collection, query, where, getDocs, addDoc, setDoc, serverTimestamp } from "firebase/firestore"
+import { getFirestore, collection, doc, where, getDocs, addDoc, setDoc, serverTimestamp, updateDoc } from "firebase/firestore"
 import {
     getAuth
 } from 'firebase/auth';
@@ -18,15 +18,28 @@ const auth = getAuth(firebaseApp);
 console.log("firebaseapp is initialized")
 const firestore = getFirestore(firebaseApp);
 console.log("firestoredb is connected ")
-const colRef = collection(firestore, "db-test1")
+const colRef = collection(firestore, "user-timeline-log")
 console.log("firestore collection is fetched ")
 
-async function add_data( user_id, result, projectIdFunc) {
-    var docId = await addDoc(collection(firestore, "db-test1"), {
-        user_id : user_id,
+async function add_data(userEmail, userId, result, projectIdFunc) {
+    var docId = await addDoc(collection(firestore, "user-timeline-log"), {
+        user_id : userId,
+        user_email: userEmail,
         tabs: result,
-        timeStamp: serverTimestamp(),
-        projectId: projectIdFunc
+        time_stamp: serverTimestamp(),
+        project_id: projectIdFunc
+    });
+    return docId
+}
+
+async function userOnlineData( userEmail, userId, projectIdFunc) {
+    var docVal = doc(collection(firestore, "user-online"), userId)
+    console.log(`userOnlineData ${docVal}`);
+    var docId = await setDoc(docVal, {
+        user_id : userId,
+        user_email: userEmail,
+        time_stamp: serverTimestamp(),
+        project_id: projectIdFunc
     });
     return docId
 }
@@ -74,5 +87,6 @@ function get_data_from_storage( ){
 export{
     auth,
     firestore,
-    add_data
+    add_data,
+    userOnlineData
 }
