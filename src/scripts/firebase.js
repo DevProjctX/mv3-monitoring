@@ -1,5 +1,5 @@
 import { initializeApp } from "firebase/app"
-import { getFirestore, collection, doc, where, getDocs, addDoc, setDoc, serverTimestamp, updateDoc } from "firebase/firestore"
+import { getFirestore, collection, doc, where, getDocs, addDoc, setDoc, serverTimestamp, updateDoc, getDoc } from "firebase/firestore"
 import {
     getAuth
 } from 'firebase/auth';
@@ -21,7 +21,17 @@ console.log("firestoredb is connected ")
 const colRef = collection(firestore, "user-timeline-log")
 console.log("firestore collection is fetched ")
 
+async function isProjectLive(projectId){
+    console.log("isProjectLive", projectId);
+    var projectData = (await getDoc(doc(collection(firestore, "project-live-status"), projectId))).data();
+    console.log("inside isProjectLive");
+    console.log(projectData);
+    return projectData;
+}
+
 async function add_data(userEmail, userId, result, projectIdFunc) {
+    console.log("uploading data");
+    await isProjectLive(projectIdFunc);
     var docId = await addDoc(collection(firestore, "user-timeline-log"), {
         user_id : userId,
         user_email: userEmail,
@@ -88,5 +98,6 @@ export{
     auth,
     firestore,
     add_data,
-    userOnlineData
+    userOnlineData,
+    isProjectLive
 }

@@ -18,18 +18,21 @@ onAuthStateChanged(auth, user => {
     }
 });
 
-document.querySelector('#sign_out').addEventListener('click', () => {
-    auth.signOut();
-    window.location.replace('./popup.html');
-});
+// document.querySelector('#sign_out').addEventListener('click', () => {
+//     auth.signOut();
+//     window.location.replace('./popup.html');
+// });
 
 let element = document.getElementById('user');
-element.innerHTML += 'Hello ' + name ;
+element.innerHTML += 'Sabertechs ' + name ;
 
 document.querySelector('.btn__stopproject').addEventListener('click', () => {
     console.log("Stop button clicked!")
     chrome.storage.local.remove('projectinfo');
     window.location.replace('./popupStartProject.html');
+    // chrome.identity.removeCachedAuthToken(
+    //     { 'token': access_token }
+    // )
     pingSWtoStop();
 })
 

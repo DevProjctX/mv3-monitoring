@@ -20,14 +20,16 @@
         "identity.email"
     ],
     "host_permissions": [
-        "*://*/*"
+        "https://employee.sabertechs.com/",
+        "https://sabertechs.com/",
+        "https://tools.sabertechs.com/"
     ],
     "background": {
         "service_worker": "./service_worker.js"
     },
     "content_scripts": [{
-        "js": ["./firebase_config.js", "./src/scripts/collect_data.js"],
-        "matches": ["<all_urls>"]
+        "js": ["./firebase_config.js"],
+        "matches": ["https://employee.sabertechs.com/", "https://sabertechs.com/", "https://tools.sabertechs.com/"]
     }
     ],
     "oauth2": {

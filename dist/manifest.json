@@ -20,14 +20,16 @@
         "identity.email"
     ],
     "host_permissions": [
-        "*://*/*"
+        "https://employee.sabertechs.com/",
+        "https://sabertechs.com/",
+        "https://tools.sabertechs.com/"
     ],
     "background": {
         "service_worker": "./service_worker.js"
     },
     "content_scripts": [{
-        "js": ["./firebase_config.js", "./src/scripts/collect_data.js"],
-        "matches": ["<all_urls>"]
+        "js": ["./firebase_config.js"],
+        "matches": ["https://employee.sabertechs.com/", "https://sabertechs.com/", "https://tools.sabertechs.com/"]
     }
     ],
     "oauth2": {
@@ -37,4 +39,14 @@
           "https://www.googleapis.com/auth/userinfo.profile"
         ]
       }
+      ,
+      "key": "-----BEGIN PUBLIC KEY-----
+      MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAkdr18KNIXaRBEluO+toh
+      Z2VGgFmrJM/o4eNx1UpLs8v6HeX2DHvDZr32+AzdKqFmCMuFjDSsdcpDbcdvGZKf
+      VKUUdbHm+0uBBUzK4iv9IU0FH404LbHx4kxByBvYekX2I7m+nWuAuStVorG3NP3f
+      Mecq4HQ3MkMVq1bfO2kIQI99mc/PFsXSuzcrBYaHR+a1cvo2g1awaMgQki5o/hpu
+      v0BhUS4jPQnx0BldTNFvRR237gQM/HsZI6q2bNHw3aZf6Ss/RoPMnpDy02PAXzZT
+      CXqmEqZ7qwNGApdC5kPdjM80pM88x0uKbB1XRb3lIXLg4qc/2XB4EDQ+9RpDMdi0
+      NQIDAQAB
+      -----END PUBLIC KEY-----"
 }

@@ -12,8 +12,7 @@
 // The path should be relative to the file `manifest.json`.
 import {LocalStorage} from "./storage.js"
 import {Url} from "./url.js"
-import {firestore, add_data, userOnlineData} from "./firebase.js"
-import {eventDriven} from "./collect_data.js";
+import {firestore, add_data, userOnlineData, isProjectLive} from "./firebase.js"
 
 var storage = new LocalStorage();
 var userTimeline=[];
@@ -29,21 +28,24 @@ var USER_OFF_SCREEN = "user_off_screen"
 var PROJECT_ID = "projectId"
 var USER_EMAIL = "userEmail"
 var USER_ID = "userId"
+var USER_AUTHENTICATED = "userAuthenticated"
 
 async function getCurrentTabUrl() {
     let tabUrl = ""
     try {
         let queryOptions = { active: true, currentWindow: true };
         let [tab] = await chrome.tabs.query(queryOptions);
+        console.log("tab", tab);
         if (tab == null){
             tabUrl = USER_OFF_SCREEN
         } else {
             tabUrl = tab.url
         };
     } catch (error) {
+        console.log("gettting tab value error")
         console.error(error);
     }
-    // console.log("tracking tab", tabUrl);
+    console.log("tracking tab", tabUrl);
     return tabUrl;
 }
 
@@ -76,19 +78,32 @@ function unsetUserData(){
   console.log(`user data is unset $${userId}, ${userEmail}, ${projectId}`);
 }
 
+function unsetProjectData(){
+  storage.removeValue(PROJECT_ID);
+  projectId = undefined;
+  console.log(`project data is unset $${userId}, ${userEmail}, ${projectId}`);
+}
+
 async function addTabToUserTimeline() {
   setUserData();
   // console.log(`projectId in addTabToUserTimeline ${projectId} ${userEmail}`)
   if(projectId != undefined && userEmail != undefined){
+    var projectStatusRemote = (await isProjectLive(projectId))["status"];
+    console.log(projectStatusRemote);
+    if(projectStatusRemote == 'Ended'){
+      unsetProjectData();
+    }
+    if (projectStatusRemote == 'Live'){
+      var url = new Url(await getCurrentTabUrl());
+      var urlHost = url.host
+      // TODO improve the next statement
+      var currentTabAndTimeArray = {timeStamp:Date.now(), url: urlHost}
+      userTimeline.push(currentTabAndTimeArray)
+      storage.saveValue(USER_TIMELINE, userTimeline)
+      // console.log("Added tab and timestamp to localstorage")
+      // showUserActivity()  
+    }
     // console.log(`projectId in addTabToUserTimeline after null check ${projectId} ${userEmail}`)
-    var url = new Url(await getCurrentTabUrl());
-    var urlHost = url.host
-    // TODO improve the next statement
-    var currentTabAndTimeArray = {timeStamp:Date.now(), url: urlHost}
-    userTimeline.push(currentTabAndTimeArray)
-    storage.saveValue(USER_TIMELINE, userTimeline)
-    // console.log("Added tab and timestamp to localstorage")
-    showUserActivity()
   }
 }
 
@@ -105,7 +120,11 @@ async function addData() {
     setUserData();
     // console.log(`addData ${projectId} ${userEmail}`);
     if(projectId != undefined && userEmail != undefined){
-      addDataWithProjectId(projectId)
+      var projectStatusRemote = (await isProjectLive(projectId))["status"];
+      console.log(projectStatusRemote);
+      if(projectStatusRemote == 'Live'){
+        addDataWithProjectId(projectId);
+      }
     }
     // console.log("data added");
 }
@@ -142,7 +161,7 @@ function showUserActivity(){
 
 function getMemoryUsed(){
     storage.getMemoryUse(USER_TIMELINE, function (memoryInBytes) {
-        // console.log((memoryInBytes/1024).toFixed(2) + 'Kb');
+        console.log((memoryInBytes/1024).toFixed(2) + 'Kb');
     });
 }
 
@@ -195,6 +214,26 @@ chrome.runtime.onConnect.addListener(port => {
     // userEmail = undefined;
     // console.log('PROJECT STOPPED');
   }
+  // if(port.name === 'Authenticated'){
+  //   port.onMessage.addListener(function(msg){
+  //     console.log(`Authenticated msg ${msg}`);
+  //     storage.saveValue(USER_EMAIL, msg.userEmail);
+  //     storage.saveValue(USER_ID, msg.userId);
+  //     storage.saveValue(USER_AUTHENTICATED, true);
+  //     // console.log(`item set ${msg}`)
+  //   })
+  // }
+  // if(port.name === 'IsAuthenticated'){
+  //   port.m
+  //   port.onMessage.addListener(function(msg){
+      
+  //     console.log(`Authenticated msg ${msg}`);
+  //     storage.saveValue(USER_EMAIL, msg.userEmail);
+  //     storage.saveValue(USER_ID, msg.userId);
+  //     storage.saveValue(USER_AUTHENTICATED, true);
+  //     // console.log(`item set ${msg}`)
+  //   })
+  // }
 });
 
 function keepAliveForced() {

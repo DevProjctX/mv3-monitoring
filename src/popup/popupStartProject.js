@@ -17,13 +17,13 @@ onAuthStateChanged(auth, user => {
     }
 });
 
-document.querySelector('#sign_out').addEventListener('click', () => {
-    auth.signOut();
-    window.location.replace('./popup.html');
-});
+// document.querySelector('#sign_out').addEventListener('click', () => {
+//     auth.signOut();
+//     window.location.replace('./popup.html');
+// });
 
 let element = document.getElementById('user');
-element.innerHTML += 'Hello ' + name ;
+element.innerHTML += 'Sabertechs ' + name ;
 
 document.querySelector('.btn__startproject').addEventListener('click', () => {
     console.log("start project button clicked!")

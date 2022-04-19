@@ -12,10 +12,22 @@ import {
 setPersistence(auth, browserLocalPersistence)
 function init() {
     // Detect auth state
+    // save the user when 1st sign in, and then retrieve that user
+    // pingSWUserIsAuthenticated();
+    console.log("$auth");
+    // startAuth(true);
+    startAuth()
+    const user = auth.currentUser;
+    if(user != null){
+        window.location.replace('./popupStartProject.html');
+    }
+    // console.log($auth);
     onAuthStateChanged(auth, user => {
         if (user != null) {
+            window.user = user;
+            chrome.user = user;
             chrome.send
-            console.log(`User is logged in: ${user}`)
+            console.log(user);
             chrome.storage.local.get(['projectinfo'], function(result){
                 if(result.projectinfo != undefined){
                     window.location.replace('./popupStopProject.html');        
@@ -38,7 +50,7 @@ function initFirebaseApp() {
     // Detect auth state
     onAuthStateChanged(auth, user => {
         if (user != null) {
-            console.log(`logged in! ${user}`);
+            console.log(user);
             setPersistence(auth, browserLocalPersistence)
         } else {
             console.log('No user');
@@ -79,6 +91,7 @@ function startAuth(interactive) {
             // Builds Firebase credential with the Google ID token.
             const credential = GoogleAuthProvider.credential(null, token);
             signInWithCredential(auth, credential).then((result) => {
+                chrome.storage.sync.set({uid: result.user.uid});
                 console.log("Success!!!")
                 console.log(result)
             }).catch((error) => {
@@ -91,5 +104,25 @@ function startAuth(interactive) {
     });
 }
 
+function pingSWUserAuth(projectid){
+    var port = chrome.runtime.connect({
+        name: "Authenticated"
+    });
+    var user = auth.currentUser;
+    port.postMessage({userId: user.uid, userEmail: user.email});
+    port.onMessage.addListener(function(msg) {
+        console.log("message recieved" + msg);
+    });
+}
 
-
+function pingSWUserIsAuthenticated(){
+    var port = chrome.runtime.connect({
+        name: "IsAuthenticated"
+    });
+    var userAuthenticated = false;
+    port.onMessage.addListener(function(msg) {
+        console.log("message recieved" + msg);
+        userAuthenticated = msg.userAuthenticated
+    });
+    return userAuthenticated;
+}
