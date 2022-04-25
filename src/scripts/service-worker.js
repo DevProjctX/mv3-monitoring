@@ -12,7 +12,7 @@
 // The path should be relative to the file `manifest.json`.
 import {LocalStorage} from "./storage.js"
 import {Url} from "./url.js"
-import {firestore, add_data, userOnlineData, isProjectLive} from "./firebase.js"
+import {firestore, add_data, userOnlineData, isProjectLive, start_project} from "./firebase.js"
 
 var storage = new LocalStorage();
 var userTimeline=[];
@@ -191,6 +191,7 @@ chrome.runtime.onConnect.addListener(port => {
     port.onDisconnect.addListener(keepAliveForced);
   }
   if(port.name === 'StartProject'){
+    start_project(msg.projectId, msg.userId)
     port.onMessage.addListener(function(msg){
       console.log(`StartProject msg ${msg}`);
       storage.saveValue(PROJECT_ID, msg.projectId);

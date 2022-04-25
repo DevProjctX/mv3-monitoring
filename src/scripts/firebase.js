@@ -23,7 +23,7 @@ console.log("firestore collection is fetched ")
 
 async function isProjectLive(projectId){
     console.log("isProjectLive", projectId);
-    var projectData = (await getDoc(doc(collection(firestore, "project-live-status"), projectId))).data();
+    var projectData = (await getDoc(doc(collection(firestore, "projects"), projectId))).data();
     console.log("inside isProjectLive");
     console.log(projectData);
     return projectData;
@@ -31,7 +31,6 @@ async function isProjectLive(projectId){
 
 async function add_data(userEmail, userId, result, projectIdFunc) {
     console.log("uploading data");
-    await isProjectLive(projectIdFunc);
     var docId = await addDoc(collection(firestore, "user-timeline-log"), {
         user_id : userId,
         user_email: userEmail,
@@ -40,6 +39,12 @@ async function add_data(userEmail, userId, result, projectIdFunc) {
         project_id: projectIdFunc
     });
     return docId
+}
+
+async function start_project(projectId, userId) {
+    await updateDoc(doc(collection(firestore, "agent-project-map"), userId+"."+projectId), {
+        start_project: serverTimestamp()
+    });
 }
 
 async function userOnlineData( userEmail, userId, projectIdFunc) {
@@ -98,6 +103,7 @@ export{
     auth,
     firestore,
     add_data,
+    start_project,
     userOnlineData,
     isProjectLive
 }

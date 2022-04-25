@@ -2,7 +2,7 @@
     "manifest_version": 3,
     "name": "Proctor Activity",
     "description": "Chrome extension to monitor Sabertechs freelancers activity while they are doing a project",
-    "version": "0.0.1",
+    "version": "0.0.2",
     "icons": {
         "16": "./src/logo/logo-16.png",
         "48": "./src/logo/logo-48.png",
