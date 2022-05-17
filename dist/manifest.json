@@ -2,7 +2,7 @@
     "manifest_version": 3,
     "name": "Proctor Activity",
     "description": "Chrome extension to monitor Sabertechs freelancers activity while they are doing a project",
-    "version": "0.0.3",
+    "version": "0.0.4",
     "icons": {
         "16": "./src/logo/logo-16.png",
         "48": "./src/logo/logo-48.png",
@@ -39,14 +39,4 @@
           "https://www.googleapis.com/auth/userinfo.profile"
         ]
       }
-      ,
-      "key": "-----BEGIN PUBLIC KEY-----
-      MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAkdr18KNIXaRBEluO+toh
-      Z2VGgFmrJM/o4eNx1UpLs8v6HeX2DHvDZr32+AzdKqFmCMuFjDSsdcpDbcdvGZKf
-      VKUUdbHm+0uBBUzK4iv9IU0FH404LbHx4kxByBvYekX2I7m+nWuAuStVorG3NP3f
-      Mecq4HQ3MkMVq1bfO2kIQI99mc/PFsXSuzcrBYaHR+a1cvo2g1awaMgQki5o/hpu
-      v0BhUS4jPQnx0BldTNFvRR237gQM/HsZI6q2bNHw3aZf6Ss/RoPMnpDy02PAXzZT
-      CXqmEqZ7qwNGApdC5kPdjM80pM88x0uKbB1XRb3lIXLg4qc/2XB4EDQ+9RpDMdi0
-      NQIDAQAB
-      -----END PUBLIC KEY-----"
 }
