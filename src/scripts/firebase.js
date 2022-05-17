@@ -24,8 +24,6 @@ console.log("firestore collection is fetched ")
 async function isProjectLive(projectId){
     console.log("isProjectLive", projectId);
     var projectData = (await getDoc(doc(collection(firestore, "projects"), projectId))).data();
-    console.log("inside isProjectLive");
-    console.log(projectData);
     return projectData;
 }
 
@@ -42,9 +40,9 @@ async function add_data(userEmail, userId, result, projectIdFunc) {
 }
 
 async function start_project(projectId, userId) {
-    await updateDoc(doc(collection(firestore, "agent-project-map"), userId+"."+projectId), {
+    await setDoc(doc(collection(firestore, "agent-project-map"), userId+"."+projectId), {
         start_project: serverTimestamp()
-    });
+    }, {merge:true});
 }
 
 async function userOnlineData( userEmail, userId, projectIdFunc) {

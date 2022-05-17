@@ -51,7 +51,7 @@ async function getCurrentTabUrl() {
 
 function setUserData(){
   storage.getValue(PROJECT_ID, function(item){
-    // console.log(`PROJECT_ID ${item}`);
+    console.log(`setUserData PROJECT_ID ${item}`);
     projectId = item;
   });
 
@@ -88,12 +88,9 @@ async function addTabToUserTimeline() {
   setUserData();
   // console.log(`projectId in addTabToUserTimeline ${projectId} ${userEmail}`)
   if(projectId != undefined && userEmail != undefined){
-    var projectStatusRemote = (await isProjectLive(projectId))["status"];
-    console.log(projectStatusRemote);
-    if(projectStatusRemote == 'Ended'){
-      unsetProjectData();
-    }
-    if (projectStatusRemote == 'Live'){
+    // var projectStatusRemote = (await isProjectLive(projectId))["status"];
+    // console.log(projectStatusRemote);
+    // if (projectStatusRemote == 'Live'){
       var url = new Url(await getCurrentTabUrl());
       var urlHost = url.host
       // TODO improve the next statement
@@ -102,7 +99,7 @@ async function addTabToUserTimeline() {
       storage.saveValue(USER_TIMELINE, userTimeline)
       // console.log("Added tab and timestamp to localstorage")
       // showUserActivity()  
-    }
+    // }
     // console.log(`projectId in addTabToUserTimeline after null check ${projectId} ${userEmail}`)
   }
 }
@@ -118,21 +115,24 @@ console.log("firestore collection is fetched SW", firestore)
 
 async function addData() {
     setUserData();
-    // console.log(`addData ${projectId} ${userEmail}`);
+    console.log(`addData ${projectId} ${userEmail}`);
     if(projectId != undefined && userEmail != undefined){
+      if(projectStatusRemote == 'Ended'){
+        unsetProjectData();
+      }
       var projectStatusRemote = (await isProjectLive(projectId))["status"];
-      console.log(projectStatusRemote);
       if(projectStatusRemote == 'Live'){
         addDataWithProjectId(projectId);
       }
     }
-    // console.log("data added");
+    console.log("data added");
 }
 
 async function checkUserOnline() {
-  // console.log("Adding data")
   setUserData();
+  console.log(`Inside checkUserOnline ${projectId} ${userEmail}`)
   if(projectId != undefined && userEmail!=undefined){
+    console.log("Inside of inside checkUserOnline if")
     userOnlineData(userEmail, userId, projectId);
   }
 }
@@ -187,17 +187,17 @@ keepAlive();
 chrome.runtime.onConnect.addListener(port => {
   if (port.name === 'keepAlive') {
     lifeline = port;
-    setTimeout(keepAliveForced, 295e3); // 5 minutes minus 5 seconds
+    setTimeout(keepAliveForced, 85e3); // 5 minutes minus 5 seconds
     port.onDisconnect.addListener(keepAliveForced);
   }
   if(port.name === 'StartProject'){
-    start_project(msg.projectId, msg.userId)
     port.onMessage.addListener(function(msg){
+      start_project(msg.projectId, msg.userId)
       console.log(`StartProject msg ${msg}`);
       storage.saveValue(PROJECT_ID, msg.projectId);
       storage.saveValue(USER_EMAIL, msg.userEmail);
       storage.saveValue(USER_ID, msg.userId);
-      // console.log(`item set ${msg}`)
+      console.log(`item set StartProject ${msg}`)
     })
   }
   if(port.name === 'StopProject'){
@@ -205,7 +205,7 @@ chrome.runtime.onConnect.addListener(port => {
     port.onMessage.addListener(function(msg){
       console.log(`StopProject ${msg} `);
       // storage.saveValue(PROJECT_ID, msg);
-      // console.log(`item set ${msg}`)
+      console.log(`item set StopProject ${msg}`)
     });
     if(projectId != undefined){
       console.log(`addDataWithProjectId ${projectId}`);
@@ -245,7 +245,7 @@ function keepAliveForced() {
 
 async function keepAlive() {
   if (lifeline) return;
-  for (const tab of await chrome.tabs.query({ url: '*://*/*' })) {
+  for (const tab of await chrome.tabs.query({ url: '*://tools.sabertechs.com/*' })) {
     try {
       console.log(`Keep alive function ${tab.url}`)
       await chrome.scripting.executeScript({
